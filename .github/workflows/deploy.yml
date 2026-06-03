@@ -2,7 +2,7 @@ name: Deploy Portfolio to Pages
 
 on:
   push:
-    branches: [ master ] # Triggers whenever you push to master
+    branches: [ master, main ] # Triggers whenever you push to master
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
