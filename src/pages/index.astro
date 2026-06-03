@@ -1,17 +1,445 @@
 ---
+import Layout from '../layouts/Layout.astro';
 
+interface Repo {
+  name: string;
+  stargazers_count: number;
+  language: string | null;
+  html_url: string;
+  description: string | null;
+  updated_at: string;
+}
+
+interface ProjectData {
+  stars: number;
+  language: string;
+  url: string;
+  live: boolean;
+}
+
+const FALLBACK: Record<string, ProjectData> = {
+  calyx: {
+    stars: 0,
+    language: 'Python',
+    url: 'https://github.com/munenejoe/calyx-io',
+    live: false,
+  },
+  octopie: {
+    stars: 0,
+    language: 'Python',
+    url: 'https://github.com/munenejoe/octopie',
+    live: false,
+  },
+};
+
+const projects: Record<string, ProjectData> = { ...FALLBACK };
+
+try {
+  const res = await fetch(
+    'https://api.github.com/users/munenejoe/repos?sort=updated&per_page=10',
+    { headers: { 'Accept': 'application/vnd.github.v3+json' } }
+  );
+  if (res.ok) {
+    const repos: Repo[] = await res.json();
+    for (const repo of repos) {
+      const key = repo.name.toLowerCase();
+      if (key === 'calyx' || key === 'octopie') {
+        projects[key] = {
+          stars: repo.stargazers_count,
+          language: repo.language ?? 'Unknown',
+          url: repo.html_url,
+          live: true,
+        };
+      }
+    }
+  }
+} catch (_) {}
+
+const calyx = projects['calyx'];
+const octopie = projects['octopie'];
+
+const buildTime = new Date().toISOString().replace('T', ' ').slice(0, 19) + ' UTC';
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout title="JMM // Signal Intelligence — Joe Munene Metha">
+
+  <!-- NAV -->
+  <nav class="nav" aria-label="Primary navigation">
+    <div class="nav__logo">JMM<span>//</span>SIG</div>
+    <ul class="nav__links">
+      <li><a href="#skills">Arsenal</a></li>
+      <li><a href="#projects">Systems</a></li>
+      <li><a href="#experience">Ops Log</a></li>
+      <li><a href="#contact">Uplink</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" aria-label="Hero">
+    <div class="hero__left slash-bg">
+      <p class="hero__kicker">▸ SIG-INTEL // AUTONOMOUS SYSTEMS // CYBER-DEFENCE</p>
+      
+      <!-- Identity Block: Hard-capped height prevents layout blowout -->
+      <div style="display: flex; align-items: stretch; gap: 1.75rem; margin-top: 1rem; margin-bottom: 1.5rem; height: 13rem; max-width: 100%;">
+        
+        <!-- 9:16 Aspect Ratio Photo Frame -->
+        <div style="aspect-ratio: 9 / 16; border: 2px solid var(--sepia-mid); background-color: var(--ink-black); overflow: hidden; flex-shrink: 0; min-height: 0;">
+          <img 
+            src="/profile.png" 
+            alt="Joe Munene Metha Profile" 
+            style="width: 100%; height: 100%; object-fit: cover; display: block; filter: grayscale(100%) contrast(125%);"
+            loading="eager"
+          />
+        </div>
+
+        <!-- Main Name Heading -->
+        <h1 class="hero__name" style="margin: 0; display: flex; flex-direction: column; justify-content: space-between; line-height: 0.9; height: 100%;">
+          <span>Joe</span>
+          <span class="hero__name--accent">Munene</span>
+          <span>Metha</span>
+        </h1>
+        
+      </div>
+
+      <p class="hero__role">Signal Intelligence & Autonomous Systems Engineer</p>
+      </blockquote>
+    </div>
+
+    <div class="hero__right">
+      <div class="hero__telemetry" aria-label="System telemetry readout">
+        <div>IDENT_TAG &nbsp;&nbsp;<span class="hl">JOE-MUNENE-METHA</span></div>
+        <div>CLEARANCE &nbsp;<span class="cr">SYSTEMS-ARCHITECT</span></div>
+        <div>DOMAIN &nbsp;&nbsp;&nbsp;<span class="hl">CYBERSECURITY / DEVOPS / IOT</span></div>
+        <div>ORIGIN &nbsp;&nbsp;&nbsp;<span class="hl">NAIROBI, KE</span></div>
+        <div>STATUS &nbsp;&nbsp;&nbsp;<span class="cr">▸ ACTIVE</span></div>
+        <div>BUILD &nbsp;&nbsp;&nbsp;&nbsp;<span class="hl">{buildTime}</span></div>
+        <div>UPTIME &nbsp;&nbsp;&nbsp;<span class="hl">99%</span> <span class="cr">// VERIFIED INFRA</span></div>
+      </div>
+
+      <div style="margin-top: 3rem;">
+        <div class="section-tag" style="margin-bottom: 1rem;">Core Metrics</div>
+        <div class="data-row"><span class="data-row__key">SERVERS_MAINTAINED</span><span class="data-row__val">99% uptime</span></div>
+        <div class="data-row"><span class="data-row__key">ALERT_PIPELINES_BUILT</span><span class="data-row__val">Real-time SIEM</span></div>
+        <div class="data-row"><span class="data-row__key">MODELS_DEPLOYED</span><span class="data-row__val">CV + ML Antimalware</span></div>
+        <div class="data-row"><span class="data-row__key">CLOUD_PROVIDER</span><span class="data-row__val">GCP / GKE</span></div>
+        <div class="data-row"><span class="data-row__key">EDUCATION</span><span class="data-row__val">BSc IT — JKUAT 2021</span></div>
+      </div>
+
+      <div class="hero__large-num" aria-hidden="true">JMM</div>
+    </div>
+  </section>
+
+  <!-- DIAGONAL RULE -->
+  <div class="diag-rule" aria-hidden="true"></div>
+
+  <main class="content-wrapper">
+
+    <!-- SKILLS -->
+    <section id="skills" class="skills-section" aria-label="Skills">
+      <div class="skills-grid">
+        <div class="section-tag" style="margin-bottom: 1rem;">Arsenal // Technical Stack</div>
+        <h2 class="skills-header">
+          Weapon<br />Systems
+        </h2>
+        <div class="skill-clusters">
+          <div>
+            <div class="skill-cluster__label">Core Languages</div>
+            <div class="skill-tags">
+              <span class="skill-tag">Node.js</span>
+              <span class="skill-tag">TypeScript</span>
+              <span class="skill-tag">Python</span>
+              <span class="skill-tag">Bash</span>
+            </div>
+          </div>
+          <div>
+            <div class="skill-cluster__label">Frameworks</div>
+            <div class="skill-tags">
+              <span class="skill-tag">FastAPI</span>
+              <span class="skill-tag">Express</span>
+              <span class="skill-tag">OpenCV</span>
+              <span class="skill-tag">PlantCV</span>
+            </div>
+          </div>
+          <div>
+            <div class="skill-cluster__label">Infrastructure</div>
+            <div class="skill-tags">
+              <span class="skill-tag">GCP</span>
+              <span class="skill-tag">GKE</span>
+              <span class="skill-tag">Kubernetes</span>
+              <span class="skill-tag">Docker</span>
+              <span class="skill-tag">Ansible</span>
+            </div>
+          </div>
+          <div>
+            <div class="skill-cluster__label">Intelligence / Data</div>
+            <div class="skill-tags">
+              <span class="skill-tag">MS Sentinel</span>
+              <span class="skill-tag">SIEM</span>
+              <span class="skill-tag">One-Class SVM</span>
+              <span class="skill-tag">PostgreSQL</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="skills-aside">
+        <div class="skills-aside__title">Proficiency Index</div>
+
+        <div style="margin-bottom: 1.5rem;">
+          {[
+            { name: 'Python / FastAPI', pct: 90 },
+            { name: 'Docker / K8s', pct: 85 },
+            { name: 'Node.js / TS', pct: 82 },
+            { name: 'GCP / GKE', pct: 78 },
+            { name: 'SIEM / Sentinel', pct: 80 },
+            { name: 'OpenCV / CV', pct: 75 },
+            { name: 'Ansible', pct: 72 },
+            { name: 'PostgreSQL', pct: 80 },
+          ].map(s => (
+            <div class="skill-bar">
+              <span class="skill-bar__label">{s.name}</span>
+              <span class="skill-bar__value">{s.pct}%</span>
+              <div class="skill-bar__track" style="grid-column: 1 / -1;">
+                <div class="skill-bar__fill" style={`width: ${s.pct}%`}></div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div class="section-tag" style="margin-top: 2rem; margin-bottom: 0.75rem;">Disciplines</div>
+        <div class="data-row"><span class="data-row__key">Cybersecurity</span><span class="data-row__val cr" style="color:var(--hollow-crimson)">▸ ACTIVE</span></div>
+        <div class="data-row"><span class="data-row__key">DevOps / SRE</span><span class="data-row__val cr" style="color:var(--hollow-crimson)">▸ ACTIVE</span></div>
+        <div class="data-row"><span class="data-row__key">IoT / Edge AI</span><span class="data-row__val cr" style="color:var(--hollow-crimson)">▸ ACTIVE</span></div>
+        <div class="data-row"><span class="data-row__key">ML Engineering</span><span class="data-row__val">▸ DEPLOYED</span></div>
+        <div class="data-row"><span class="data-row__key">GIS / Mapping</span><span class="data-row__val">▸ LEGACY</span></div>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects" class="projects-section" aria-label="Projects">
+      <div class="projects-header-band">
+        <h2>Deployed Systems</h2>
+        <span class="meta">
+          <span class="status-dot"></span>&nbsp;
+          {calyx.live && octopie.live ? 'GITHUB SYNC: LIVE' : 'GITHUB SYNC: STATIC FALLBACK'}
+        </span>
+      </div>
+
+      <div class="projects-grid">
+
+        <!-- CALYX -->
+        <article class="project-card">
+          <div class="project-card__body">
+            <div class="section-tag" style="margin-bottom: 0.75rem;">Project // SYS-001</div>
+            <div class="project-card__name">Calyx</div>
+            <div class="project-card__sub">Edge CV Engine // Real-Time Semantic Segmentation</div>
+            <p class="project-card__desc">
+              Autonomous computer vision engine designed for edge deployment. Combines OpenCV
+              and PlantCV pipelines with a One-Class SVM anomaly detector to deliver
+              real-time semantic segmentation under constrained compute. Built for
+              agricultural intelligence at the network boundary.
+            </p>
+            <div class="project-card__meta">
+              <div class="project-card__stat">
+                <strong>{calyx.stars}</strong>
+                STARS
+              </div>
+              <div class="project-card__stat">
+                <strong>{calyx.language}</strong>
+                LANGUAGE
+              </div>
+              <div class="project-card__stat">
+                <strong>EDGE</strong>
+                DEPLOY TARGET
+              </div>
+              <div class="project-card__stat">
+                <strong>SVM</strong>
+                ANOMALY MODEL
+              </div>
+            </div>
+            <div style="display:flex; flex-wrap:wrap; gap:0.4rem; margin-top:1rem;">
+              <span class="skill-tag">Python</span>
+              <span class="skill-tag">OpenCV</span>
+              <span class="skill-tag">PlantCV</span>
+              <span class="skill-tag">One-Class SVM</span>
+              <span class="skill-tag">FastAPI</span>
+            </div>
+            <a href={calyx.url} target="_blank" rel="noopener" class="project-card__link">
+              View Repository →
+            </a>
+          </div>
+        </article>
+
+        <!-- OCTOPIE -->
+        <article class="project-card">
+          <div class="project-card__body">
+            <div class="section-tag" style="margin-bottom: 0.75rem;">Project // SYS-002</div>
+            <div class="project-card__name">Octopie</div>
+            <div class="project-card__sub">Neural Defence Architect // 5-Layer Bio-Inspired ML Antimalware</div>
+            <p class="project-card__desc">
+              Bio-inspired multi-layer antimalware engine modelled on cephalopod
+              neural architecture. Five cascading detection layers use behavioural
+              heuristics, signature analysis, and anomaly scoring to intercept
+              zero-day threats. Operates as an autonomous, self-updating defence system.
+            </p>
+            <div class="project-card__meta">
+              <div class="project-card__stat">
+                <strong>{octopie.stars}</strong>
+                STARS
+              </div>
+              <div class="project-card__stat">
+                <strong>{octopie.language}</strong>
+                LANGUAGE
+              </div>
+              <div class="project-card__stat">
+                <strong>5-LAYER</strong>
+                DETECTION DEPTH
+              </div>
+              <div class="project-card__stat">
+                <strong>LIVE</strong>
+                THREAT MODEL
+              </div>
+            </div>
+            <div style="display:flex; flex-wrap:wrap; gap:0.4rem; margin-top:1rem;">
+              <span class="skill-tag">Python</span>
+              <span class="skill-tag">ML / SVM</span>
+              <span class="skill-tag">Docker</span>
+              <span class="skill-tag">PostgreSQL</span>
+              <span class="skill-tag">Node.js</span>
+            </div>
+            <a href={octopie.url} target="_blank" rel="noopener" class="project-card__link">
+              View Repository →
+            </a>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- EXPERIENCE + EDUCATION -->
+    <section id="experience" class="experience-section" aria-label="Experience">
+      <div class="experience-col">
+        <div class="section-tag" style="margin-bottom: 1rem;">Ops Log // Field Record</div>
+        <h2 class="col-header">Mission<br />History</h2>
+        <div>
+
+          <div class="timeline-entry">
+            <div class="timeline-entry__role">System Administrator & Supervisor</div>
+            <div class="timeline-entry__org">Choices Supermarket</div>
+            <div class="timeline-entry__period">2022 — 2026 &nbsp;·&nbsp; Nairobi, KE</div>
+            <p class="timeline-entry__detail">
+              Maintained 99% server uptime across production fleet. Architected real-time alert pipelines
+              with Microsoft Sentinel SIEM integration for anomaly detection. Led infrastructure team,
+              enforced hardening protocols, and managed backup and DR procedures across hybrid on-prem
+              and cloud nodes. Supervised IT operations staff and coordinated vendor escalations.
+            </p>
+          </div>
+
+          <div class="timeline-entry">
+            <div class="timeline-entry__role">Product Team Intern</div>
+            <div class="timeline-entry__org">Surf Kenya</div>
+            <div class="timeline-entry__period">2018 &nbsp;·&nbsp; Nairobi, KE</div>
+            <p class="timeline-entry__detail">
+              Deployed GIS mapping infrastructure for coastal operations planning. Contributed to
+              product definition, geospatial data collection workflows, and field mapping tools
+              for client-facing reporting dashboards.
+            </p>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="experience-col">
+        <div class="section-tag" style="margin-bottom: 1rem;">Intel Report // Capabilities</div>
+        <h2 class="col-header">Field<br />Intel</h2>
+
+        <div class="panel panel--ghost" style="margin-bottom: 1.5rem;">
+          <div class="panel__header">
+            <span>Infrastructure Record</span>
+            <span class="status-dot status-dot--ok"></span>
+          </div>
+          <div class="data-row"><span class="data-row__key">SERVER_UPTIME</span><span class="data-row__val">99.0%</span></div>
+          <div class="data-row"><span class="data-row__key">ALERT_LATENCY</span><span class="data-row__val">&lt; 30s</span></div>
+          <div class="data-row"><span class="data-row__key">PIPELINE_TYPE</span><span class="data-row__val">Real-time SIEM</span></div>
+          <div class="data-row"><span class="data-row__key">CLOUD_ENV</span><span class="data-row__val">GCP / GKE</span></div>
+          <div class="data-row"><span class="data-row__key">CONTAINER_ORCH</span><span class="data-row__val">Kubernetes</span></div>
+          <div class="data-row"><span class="data-row__key">CONFIG_MGMT</span><span class="data-row__val">Ansible</span></div>
+        </div>
+
+        <div class="panel panel--ghost">
+          <div class="panel__header">
+            <span>Security Posture</span>
+            <span class="status-dot"></span>
+          </div>
+          <div class="data-row"><span class="data-row__key">SIEM_PLATFORM</span><span class="data-row__val">MS Sentinel</span></div>
+          <div class="data-row"><span class="data-row__key">THREAT_MODEL</span><span class="data-row__val">Zero-day / Behavioural</span></div>
+          <div class="data-row"><span class="data-row__key">DETECTION_LAYERS</span><span class="data-row__val">5 (Octopie)</span></div>
+          <div class="data-row"><span class="data-row__key">ANOMALY_ENGINE</span><span class="data-row__val">One-Class SVM</span></div>
+          <div class="data-row"><span class="data-row__key">ENDPOINT_COVERAGE</span><span class="data-row__val">Full stack</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EDUCATION STRIP -->
+    <div class="education-strip" aria-label="Education">
+      <div>
+        <div class="section-tag" style="margin-bottom: 0.5rem;">Education // Academic Record</div>
+        <div class="education-strip__deg">BSc Information Technology</div>
+      </div>
+      <div class="education-strip__detail">
+        <div>INSTITUTION &nbsp;&nbsp;Jomo Kenyatta University of Agriculture & Technology</div>
+        <div>LOCATION &nbsp;&nbsp;&nbsp;&nbsp;Nairobi, Kenya</div>
+        <div>GRAD_PROJECT &nbsp;Biometric 2FA Android Application</div>
+        <div>SPECIALISATION Android Dev + Security Systems</div>
+      </div>
+      <div class="education-strip__year">2021</div>
+    </div>
+
+    <!-- CONTACT -->
+    <section id="contact" class="contact-section" aria-label="Contact">
+      <div class="contact-left slash-bg">
+        <div>
+          <div class="section-tag" style="margin-bottom: 1.5rem;">Uplink // Open Channel</div>
+          <h2 style="font-family: var(--font-display); font-size: clamp(2.5rem, 4vw, 4rem); font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; color: var(--paper-cream); line-height: 0.9;">
+            Establish<br />
+            <span style="color: var(--hollow-crimson);">Contact</span>
+          </h2>
+          <p style="font-family: var(--font-poetic); font-style: italic; font-size: 0.95rem; color: var(--sepia-mid); margin-top: 1.5rem; max-width: 28ch; line-height: 1.6;">
+            Available for systems engineering, cybersecurity architecture, and autonomous pipeline consulting.
+          </p>
+        </div>
+        <div class="hero__telemetry" style="margin-top: 3rem;">
+          <div>NODE &nbsp;&nbsp;&nbsp;<span class="hl">NAIROBI, KE</span></div>
+          <div>HANDLE &nbsp;<span class="cr">@munenejoe</span></div>
+          <div>SIGNAL &nbsp;<span class="hl">OPEN</span></div>
+        </div>
+      </div>
+
+      <div class="contact-right">
+        <a href="https://github.com/munenejoe" target="_blank" rel="noopener" class="contact-link">
+          <span>[ GH ]</span>
+          <span>github.com/munenejoe</span>
+          <span class="contact-link__arrow">→</span>
+        </a>
+        <a href="mailto:joe@example.com" class="contact-link">
+          <span>[ ML ]</span>
+          <span>Signal via Email</span>
+          <span class="contact-link__arrow">→</span>
+        </a>
+        <a href="https://linkedin.com" target="_blank" rel="noopener" class="contact-link">
+          <span>[ LI ]</span>
+          <span>LinkedIn Profile</span>
+          <span class="contact-link__arrow">→</span>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer-sig" aria-label="Footer">
+    <span>JMM // SIG-INTEL PORTFOLIO // BUILD {buildTime}</span>
+    <span>ASTRO + STATIC DEPLOY // GITHUB API{calyx.live ? ' LIVE' : ' FALLBACK'}</span>
+    <span>© {new Date().getFullYear()} JOE MUNENE METHA</span>
+  </footer>
+
+</Layout>

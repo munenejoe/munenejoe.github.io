@@ -1,0 +1,210 @@
+---
+import '../styles/global.css';
+
+export interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "JOE MUNENE METHA // SIGNAL ARCHITECT",
+  description = "Extract structural signal. Filter entropy. Engineer autonomous decisions at scale."
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=JetBrains+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,400&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* ============================================
+         GLOBAL RESET & BASE
+      ============================================ */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html {
+        scroll-behavior: smooth;
+        overflow-x: hidden;
+      }
+
+      body {
+        background-color: var(--bg-charcoal);
+        color: var(--paper-cream);
+        font-family: var(--font-telemetry);
+        font-size: 14px;
+        line-height: 1.6;
+        overflow-x: hidden;
+        cursor: crosshair;
+      }
+
+      /* ============================================
+          MANGA PROFILE IDENTITY BLOCK
+          ============================================ */
+        .manga-identity-hub {
+          display: flex;
+          align-items: stretch; /* Forces the image height to lock onto the text block height */
+          gap: var(--sp-lg);
+          max-width: max-content;
+        }
+
+        .profile-panel-9-16 {
+          aspect-ratio: 9 / 16;
+          border: 3px solid var(--sepia-mid);
+          background-color: var(--ink-black);
+          overflow: hidden;
+          position: relative;
+          box-shadow: 4px 4px 0px var(--ink-black);
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .profile-panel-9-16:hover {
+          transform: translate(-2px, -2px);
+          box-shadow: 6px 6px 0px var(--hollow-crimson);
+        }
+
+        .profile-panel-9-16 img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+          /* Kubo Style: Converts your photo into a high-contrast ink-bleed manga aesthetic */
+          filter: grayscale(100%) contrast(135%) brightness(95%);
+        }
+
+        .manga-name-stack {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between; /* Ensures even distribution along the image line */
+          line-height: 0.85;
+        }
+
+        .manga-name-stack h1 {
+          font-family: var(--font-display);
+          font-size: clamp(3rem, 8vw, 5.5rem); /* Scalable, heavy typographical contrast */
+          text-transform: uppercase;
+          letter-spacing: -2px;
+          color: var(--paper-cream);
+        }
+
+        .manga-name-stack .middle-name {
+          color: var(--sepia-mid);
+        }
+
+      /* ============================================
+         CSS DESIGN TOKENS
+      ============================================ */
+      :root {
+        /* Core Palette */
+        --bg-charcoal: #2e2e2e;
+        --ink-black: #1a161f;
+        --paper-cream: #f1ece6;
+        --sepia-mid: #b6a697;
+        --gray-beige: #ddd5cd;
+        --hollow-crimson: #7d4047;
+
+        /* Derived tokens */
+        --crimson-glow: rgba(125, 64, 71, 0.35);
+        --ink-shadow: rgba(26, 22, 31, 0.8);
+        --paper-faint: rgba(241, 236, 230, 0.06);
+        --sepia-border: rgba(182, 166, 151, 0.4);
+
+        /* Typography */
+        --font-display: 'Oswald', sans-serif;
+        --font-poetic: 'Playfair Display', serif;
+        --font-telemetry: 'JetBrains Mono', monospace;
+
+        /* Spacing Scale */
+        --sp-xs: 4px;
+        --sp-sm: 8px;
+        --sp-md: 16px;
+        --sp-lg: 24px;
+        --sp-xl: 40px;
+        --sp-2xl: 64px;
+        --sp-3xl: 96px;
+
+        /* Border System */
+        --border-panel: 4px solid var(--sepia-mid);
+        --border-thin: 1px solid var(--sepia-border);
+        --border-crimson: 2px solid var(--hollow-crimson);
+        --border-ink: 3px solid var(--ink-black);
+      }
+
+      /* ============================================
+         SELECTION STYLING
+      ============================================ */
+      ::selection {
+        background: var(--hollow-crimson);
+        color: var(--paper-cream);
+      }
+
+      /* ============================================
+         SCROLLBAR
+      ============================================ */
+      ::-webkit-scrollbar {
+        width: 4px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: var(--ink-black);
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: var(--hollow-crimson);
+      }
+
+      /* ============================================
+         FOCUS STYLES
+      ============================================ */
+      :focus-visible {
+        outline: 2px solid var(--hollow-crimson);
+        outline-offset: 3px;
+      }
+
+      /* ============================================
+         LINKS
+      ============================================ */
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      a:hover {
+        color: var(--hollow-crimson);
+      }
+
+      /* ============================================
+         NOISE OVERLAY
+      ============================================ */
+      body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+        opacity: 0.022;
+        pointer-events: none;
+        z-index: 9999;
+      }
+    </style>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
